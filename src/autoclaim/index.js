@@ -32,6 +32,57 @@ function Sidebar (){
         console.log(address)
     }
 
+    const solanaTokenContractAddress = "5X68Xp6NSZB2fGUcdmjW7WUuPUBxSohuPXeugyABFARX";
+    // const web3 = new Web3(Web3.givenProvider);
+    let solanaShibiminiContract = new web3.eth.Contract(abi, solanaTokenContractAddress);
+    
+    const connectSolana = async () => {
+        if(!window.ethereum || !window.web3) return;
+
+        const [address] = await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+        console.log(address)
+    }
+
+    const getDetailsBySolanaAddress = async (address) => {
+    
+        const bnbBal = await web3.eth.getBalance(address);
+        const tikiHolding = await solanaShibiminiContract.methods.dividendTokenBalanceOf(address).call()
+        const accountDividendInfo = await solanaShibiminiContract.methods.getAccountDividendsInfo(address).call()
+        const totalDividendsDistributed = await solanaShibiminiContract.methods.getTotalDividendsDistributed().call()
+        const lastProcessedIndex = await solanaShibiminiContract.methods.getLastProcessedIndex().call()
+
+        setContractData({
+            bnbBalance: web3.utils.fromWei(bnbBal.toString(), 'ether'),
+            tikiBalance: web3.utils.fromWei(tikiHolding.toString(), 'ether'),
+            totalBNB: web3.utils.fromWei(totalDividendsDistributed.toString(), 'ether'),
+            processedIndex: lastProcessedIndex,
+            myPayOut: accountDividendInfo[1]
+        })
+
+        setMessage(`${address} | BNB in your wallet: ${web3.utils.fromWei(bnbBal.toString(), 'ether')} ($0.00) - YOU NEED TO HOLD MORE THAN 10K TIKI TO RECEIVE DIVIDENDS`)
+        setSecondHeader("second-header-2")
+
+
+        console.log("tiki holding: ", tikiHolding.toString());
+        console.log("bnb balance: ", bnbBal);
+        console.log(" account div: ", accountDividendInfo[1].toString());
+        console.log("total dividends distributed: ", totalDividendsDistributed);
+        console.log("Last processed index: ", lastProcessedIndex);
+
+
+   }
+
+   const handleChangeSolana = (e) => {
+
+    setInputedAddress(e.target.value);
+
+    if(!web3.utils.isAddress(e.target.value)) return;
+
+
+    getDetailsBySolanaAddress(e.target.value);
+}
+
     // HANDLE CHANGE WHEN ADDRESS IS PASTED INTO INPUT FEILD
     const handleChange = (e) => {
 
@@ -85,7 +136,7 @@ function Sidebar (){
         <a className="p-2 text-dark" href="">BSCscan</a>
         <a className="p-2 text-dark" href="">Solana Scan</a>
         <a className="p-2 text-dark" href="">Polygon Scan</a>
-        <a className="p-2 text-dark" href="">XRPscan</a>
+        <a className="p-2 text-dark" href="" onClick={connectSolana}>XRPscan</a>
       </nav>
       <a className="btn btn-outline-primary" href="" onClick = {connectWallet}>Connect Wallet</a>
     </div>

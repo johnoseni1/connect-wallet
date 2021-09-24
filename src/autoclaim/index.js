@@ -20,7 +20,7 @@ function Sidebar (){
         myPayOut: 0
     })
     
-    const shibiminiTokenContractAddress = "0x4279946cf2e0095f01d83220ef382a67a3503201"
+    const shibiminiTokenContractAddress = "0x4279946cf2e0095f01d83220ef382a67a3503201";
     const web3 = new Web3(Web3.givenProvider);
     let everShibiminiContract = new web3.eth.Contract(abi, shibiminiTokenContractAddress);
     

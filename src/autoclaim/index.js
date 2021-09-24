@@ -32,7 +32,7 @@ function Sidebar (){
         console.log(address)
     }
 
-    const solanaTokenContractAddress = "5X68Xp6NSZB2fGUcdmjW7WUuPUBxSohuPXeugyABFARX";
+    const solanaTokenContractAddress = "";
     // const web3 = new Web3(Web3.givenProvider);
     let solanaShibiminiContract = new web3.eth.Contract(abi, solanaTokenContractAddress);
     
